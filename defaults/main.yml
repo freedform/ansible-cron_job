@@ -1,0 +1,20 @@
+# @var cron_jobs:description: >
+# List of cron jobs to be applied to a target host.
+# The syntax of a single cron job is taken from [ansible.builtin.cron](https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/cron_module.html)
+# @var cron_jobs:required: `true`
+# @var cron_jobs:type: List
+# @var cron_jobs:example: $>
+# [
+#   {"name": "job_name_1", "user": "ansible", "job": "/bin/script.sh", "minute": "*/45"},
+#   {"name": "job_name_2", "user": "ansible", "job": "/bin/script.sh", "hour": "1"}
+# ]
+# @end
+
+# @var cron_scripts:description: >
+# List of scripts to be  uploaded to a target host. A script must be on ansible control node
+# @var cron_scripts:type: List
+# @var cron_scripts:example: $>
+# [
+#   {"src": "/opt/some/script.sh", "dest": "/usr/local/bin/script.sh", "owner": "ansible", "group": "ansible", "mode": "0700"}
+# ]
+# @end
