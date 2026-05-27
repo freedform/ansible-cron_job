@@ -6,6 +6,7 @@ The role cron_job helps to automate deployments of CRON jobs. Apart from this it
 
 - [Requirements](#requirements)
 - [Default Variables](#default-variables)
+  - [cron_job_actions](#cron_job_actions)
   - [cron_jobs](#cron_jobs)
   - [cron_scripts](#cron_scripts)
 - [Dependencies](#dependencies)
@@ -19,6 +20,21 @@ The role cron_job helps to automate deployments of CRON jobs. Apart from this it
 - Minimum Ansible version: `2.20`
 
 ## Default Variables
+
+### cron_job_actions
+
+List of actions the role does, accepts one or more actions.
+Use comma without spaces as a delimiter for multiple actions.
+
+**_Required:_** `true`<br />
+**_Type:_** String<br />
+
+#### Example usage
+
+```YAML
+  cron_job_actions: deploy_cron_jobs
+  cron_job_actions: deploy_cron_scripts,deploy_cron_jobs
+```
 
 ### cron_jobs
 

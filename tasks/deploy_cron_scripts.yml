@@ -1,0 +1,19 @@
+- name: Validate cron_scripts variable
+  ansible.builtin.assert:
+    that:
+      - cron_scripts is defined
+      - cron_scripts is iterable
+      - cron_scripts is not string
+      - cron_scripts | length > 0
+
+- name: Deploy cron scripts
+  ansible.builtin.copy:
+    src: "{{ cron_script.src }}"
+    dest: "{{ cron_script.dest }}"
+    owner: "{{ cron_script.owner }}"
+    group: "{{ cron_script.group }}"
+    mode: "{{ cron_script.mode }}"
+  loop: "{{ cron_scripts }}"
+  loop_control:
+    loop_var: cron_script
+    label: "{{ cron_script.src }}"

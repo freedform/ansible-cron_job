@@ -1,45 +1,16 @@
-- name: Validate cron_jobs variable
+---
+- name: Create cron_job_action_list
+  ansible.builtin.set_fact:
+    cron_job_action_list: "{{ cron_job_actions.split(',') }}"
+
+- name: Validate cron_job_action_list
   ansible.builtin.assert:
     that:
-      - cron_jobs is defined
-      - cron_jobs is iterable
-      - cron_jobs is not string
-      - cron_jobs | length > 0
+      - cron_job_action_list | length > 0
+      - cron_job_action_list | difference(cron_job_supported_actions) | length == 0
 
-- name: Deploy cron scripts
-  when:
-    - cron_scripts is defined
-    - cron_scripts is iterable
-    - cron_scripts is not string
-  ansible.builtin.copy:
-    src: "{{ cron_script.src }}"
-    dest: "{{ cron_script.dest }}"
-    owner: "{{ cron_script.owner }}"
-    group: "{{ cron_script.group }}"
-    mode: "{{ cron_script.mode }}"
-  loop: "{{ cron_scripts }}"
+- name: Run cron_job action
+  ansible.builtin.include_tasks: "{{ task_name }}.yml"
+  loop: "{{ cron_job_action_list }}"
   loop_control:
-    loop_var: cron_script
-    label: "{{ cron_script.src }}"
-
-- name: Deploy cron jobs
-  ansible.builtin.cron:
-    name: "{{ cron_job.name }}"
-    state: "{{ cron_job.state | default(omit) }}"
-    cron_file: "{{ cron_job.cron_file | default(omit) }}"
-    minute: "{{ cron_job.minute | default(omit) }}"
-    hour: "{{ cron_job.hour | default(omit) }}"
-    day: "{{ cron_job.day | default(omit) }}"
-    weekday: "{{ cron_job.weekday | default(omit) }}"
-    month: "{{ cron_job.month | default(omit) }}"
-    special_time: "{{ cron_job.special_time | default(omit) }}"
-    user: "{{ cron_job.user | default(omit) }}"
-    job: "{{ cron_job.job | default(omit) }}"
-    env: "{{ cron_job.env | default(omit) }}"
-    disabled: "{{ cron_job.disabled | default(omit) }}"
-    insertafter: "{{ cron_job.insertafter | default(omit) }}"
-    insertbefore: "{{ cron_job.insertbefore | default(omit) }}"
-  loop: "{{ cron_jobs }}"
-  loop_control:
-    loop_var: cron_job
-    label: "{{ cron_job.name }}"
+    loop_var: task_name
