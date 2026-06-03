@@ -1,0 +1,14 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"
+      vars:
+        cron_job_actions: deploy_cron_jobs
+        cron_jobs:
+          - name: test_job
+            user: root
+            job: /bin/true
+            minute: "0"
+            hour: "1"

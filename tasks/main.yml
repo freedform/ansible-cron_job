@@ -1,13 +1,14 @@
 ---
 - name: Create cron_job_action_list
   ansible.builtin.set_fact:
-    cron_job_action_list: "{{ cron_job_actions.split(',') }}"
+    cron_job_action_list: "{{ (cron_job_actions | default('')).split(',') | reject('equalto', '') | list }}"
 
 - name: Validate cron_job_action_list
   ansible.builtin.assert:
     that:
       - cron_job_action_list | length > 0
       - cron_job_action_list | difference(cron_job_supported_actions) | length == 0
+    fail_msg: "cron_job_actions must be set to one or more of: {{ cron_job_supported_actions | join(', ') }}"
 
 - name: Run cron_job action
   ansible.builtin.include_tasks: "{{ task_name }}.yml"
